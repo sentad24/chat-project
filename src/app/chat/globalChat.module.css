@@ -1,0 +1,128 @@
+.container {
+  display: flex;
+  background-color: #525254;
+  color: #dcddde;
+  height: 95vh;
+  width: 100%;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: #0a399800; 
+  padding: 10px;
+  width: 90vw;
+}
+
+/* Messages display area */
+.messageDisplay {
+  background-color: #9ba5bb9f;
+  border-radius: 8px;
+  padding: 10px;
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+ 
+ 
+}
+
+/* ====== INPUT AREA ====== */
+.actionContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #40444b;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+/* Input field */
+.placeholder {
+  flex: 1;
+  height: 40px;
+  padding: 0 15px;
+  border: none;
+  border-radius: 20px;
+  background-color: #303339;
+  color: #dcddde;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.placeholder::placeholder {
+  color: #72767d;
+}
+
+.placeholder:focus {
+  outline: none;
+  background-color: #3a3f44;
+}
+
+/* Send button */
+.button {
+  width: 40px;
+  height: 40px;
+  background-color: #5865f2; /* Discord blurple */
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.button:hover {
+  background-color: #4752c4;
+  transform: scale(1.05);
+}
+
+.button:active {
+  transform: scale(0.95);
+}
+.sendIcon{
+  width: 15px;
+  height: 15px;
+}
+.icons{
+  width: 20px;
+  height: 20px;
+}
+.comentSection{
+  background-color: blueviolet;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  width: 90vw;
+  height: 80vh;
+  justify-content: end;
+  overflow-y: scroll;
+}
+.coments{
+  background-color: #4752c4;
+  
+}
+.info{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 1rem;
+  background-color: #4ecd0f;
+  
+}
+.date{
+  font-size: 12px;
+}
+.text{
+  background-color: cadetblue;
+  font-size: 18px;
+}

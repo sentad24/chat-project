@@ -1,0 +1,90 @@
+.container {
+    width: 100px;
+    height: 95%;
+    background-color: #202225;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 0;
+    overflow: hidden;
+  }
+  .globalAndSingelChats{
+    background-color: #2d7d4600;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 0.5rem;
+    padding: 5px;
+    border-bottom: 1.5px solid #e0e0e084;
+  }
+  .chanels{
+   background-color: #c2c6cc00;
+   padding: 5px;
+   height: 70%;
+   overflow-y:scroll ;
+   scrollbar-width: none;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   align-items: center;
+   gap: 5px;
+   
+  }
+  /* Server/chat bubbles */
+  .chat {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #36393f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background 0.2s, border-radius 0.2s,0.4s ease;
+    cursor: pointer;
+  }
+  .icons{
+    width: 30px;
+    height: 30px;
+    transition: 0.4s ease;
+    
+  }
+  .icons:hover{
+    transform: scale(1.2);
+    
+
+  }
+  
+  .chat:hover {
+    background-color: #6eb3d1;
+    border-radius: 16px; /* Discord hover effect */
+    transform: scale(1.2);
+  }
+  .add{
+    position: absolute;
+    bottom: 10px;
+    padding: 5px;
+  }
+  /* Add button */
+  .addBtn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background-color: #5959595f; /* Discord green */
+    color: #dcddde;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background 0.2s, border-radius 0.2s,0.4s ease;;
+    display: grid;
+    place-content: center;
+
+  }
+  
+  .addBtn:hover {
+    background-color: #0af5afbb;
+    border-radius: 16px;
+  }
+  

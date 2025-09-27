@@ -1,0 +1,15 @@
+.container{
+    background-color:#1E1E2F;
+    display: flex;
+    width: 100vw;
+    height: 5vh;
+    justify-content: center;
+    align-items: center;
+}
+.nav{
+    width: 90vw;
+    height: 8vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
