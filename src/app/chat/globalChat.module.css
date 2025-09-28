@@ -5,6 +5,7 @@
   height: 95vh;
   width: 100%;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  overflow-y: scroll;
 }
 
 
@@ -15,6 +16,7 @@
   background-color: #0a399800; 
   padding: 10px;
   width: 90vw;
+  
 }
 
 /* Messages display area */
@@ -23,13 +25,11 @@
   border-radius: 8px;
   padding: 10px;
   flex: 1;
-  overflow-y: auto;
   margin-bottom: 10px;
   display: flex;
   justify-content: flex-start;
-  align-items: flex-end;
- 
- 
+  align-items: flex-end; 
+  
 }
 
 /* ====== INPUT AREA ====== */
@@ -100,12 +100,11 @@
 .comentSection{
   background-color: blueviolet;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: 4rem;
   width: 90vw;
   height: 80vh;
-  justify-content: end;
-  overflow-y: scroll;
+  overflow: scroll;
 }
 .coments{
   background-color: #4752c4;

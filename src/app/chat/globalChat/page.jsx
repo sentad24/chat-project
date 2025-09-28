@@ -1,86 +1,31 @@
 'use client'
 import style from "@/app/chat/globalChat.module.css"
+import { useState, useEffect } from "react"
+
 export default function GlobalChat(){
-    let memory = []
+    const [threads ,setThreads] = useState([]);
+
+    useEffect(()=>{
+        async function loadThreads(){
+            const res = await fetch("/api/threads");
+            const data = await res.json();
+            setThreads(data)
+        }
+        loadThreads();
+    },[]);
+
+
 
     return(
         <div className={style.comentSection}>
            <div className={style.coments} >
-                <div className={style.info}>
-                    <h5>usernaem</h5>
-                    <p className={style.date}>2025/02/02</p>
-                </div>
-                <div className={style.text}>
-                    Hello World
-                </div>
+                {threads.map((thread)=> (
+                    <li key={thread.id}>
+                    <strong>{thread.title}</strong> — {thread.body} {new Date(thread.created_at).toLocaleDateString()}
+                  </li>
+                ))}
            </div>
-           <div className={style.coments} >
-                <div className={style.info}>
-                    <h5>usernaem</h5>
-                    <p className={style.date}>2025/02/02</p>
-                </div>
-                <div className={style.text}>
-                    Hello Sir
-                </div>
-                
-           </div>
-           <div className={style.coments} >
-                <div className={style.info}>
-                    <h5>usernaem</h5>
-                    <p className={style.date}>2025/02/02</p>
-                </div>
-                <div className={style.text}>
-                    Hello World
-                </div>
-           </div>
-           <div className={style.coments} >
-                <div className={style.info}>
-                    <h5>usernaem</h5>
-                    <p className={style.date}>2025/02/02</p>
-                </div>
-                <div className={style.text}>
-                    Hello Sir
-                </div>
-                
-           </div>
-           <div className={style.coments} >
-                <div className={style.info}>
-                    <h5>usernaem</h5>
-                    <p className={style.date}>2025/02/02</p>
-                </div>
-                <div className={style.text}>
-                    Hello World
-                </div>
-           </div>
-           <div className={style.coments} >
-                <div className={style.info}>
-                    <h5>usernaem</h5>
-                    <p className={style.date}>2025/02/02</p>
-                </div>
-                <div className={style.text}>
-                    Hello Sir
-                </div>
-                
-           </div>
-           <div className={style.coments} >
-                <div className={style.info}>
-                    <h5>usernaem</h5>
-                    <p className={style.date}>2025/02/02</p>
-                </div>
-                <div className={style.text}>
-                    Hello World
-                </div>
-           </div>
-           <div className={style.coments} >
-                <div className={style.info}>
-                    <h5>usernaem</h5>
-                    <p className={style.date}>2025/02/02</p>
-                </div>
-                <div className={style.text}>
-                    Hello Sir
-                </div>
-                
-           </div>
+        
         </div>
     )
 }
