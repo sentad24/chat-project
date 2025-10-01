@@ -1,35 +1,54 @@
 import pool from "@/lib/db";
 import { NextResponse } from "next/server";
-
+import jwt from "jsonwebtoken";
 
 export async function GET() {
-    try{
-        const res = await pool.query("SELECT * FROM posts ORDER BY created_at DESC");
-        return NextResponse.json(res.rows)
-    }catch(err){
-        return NextResponse.json({error: "Could not fetch data"},{status:200})
-    }
-    
+  try {
+    const res = await pool.query(`
+      SELECT posts.id, posts.title, posts.body, posts.created_at, users.username
+      FROM posts
+      JOIN users ON posts.user_id = users.id
+      ORDER BY posts.created_at ASC
+    `);
+    return NextResponse.json(res.rows);
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Could not fetch posts" }, { status: 500 });
+  }
 }
 
-export async function POST() {
-    try{
-        const{user_id, title, body} = await req.json();
+export async function POST(req) {
+  const token = req.cookies.get("authToken")?.value;
+  if (!token) {
+    return NextResponse.json({ error: "No token" }, { status: 401 });
+  }
 
-        if(!user_id || !title){
-            return NextResponse.json({error: "user_id and title are required" },{ status: 400 })
-        }
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
+  } catch (err) {
+    console.error("JWT verification failed:", err.message);
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+  }
 
-        const result = await query("INSERT INTO posts (user_id, title, body) VALUES ($1, $2, $3) RETURNING *",
-            [user_id, title, body]
-        );
-        return NextResponse.json(result.rows[0], {status:201})
+ 
 
-    }catch (err) {
-        console.error(err);
-        return NextResponse.json(
-          { error: "Failed to create thread" },
-          { status: 500 }
-        );
-      }
+    
+  const user_id = decoded.id;
+
+  const { title, body } = await req.json();
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO posts (user_id, title, body) 
+       VALUES ($1, $2, $3) 
+       RETURNING *`,
+      [user_id, title, body]
+    );
+
+    return NextResponse.json(result.rows[0], { status: 201 });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+  }
 }
