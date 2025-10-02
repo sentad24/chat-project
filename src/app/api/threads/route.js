@@ -29,13 +29,9 @@ export async function POST(req) {
   } catch (err) {
     console.error("JWT verification failed:", err.message);
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-  }
+  }    
 
- 
-
-    
   const user_id = decoded.id;
-
   const { title, body } = await req.json();
 
   try {
@@ -46,7 +42,16 @@ export async function POST(req) {
       [user_id, title, body]
     );
 
-    return NextResponse.json(result.rows[0], { status: 201 });
+    const post = result.rows[0]
+
+    const userRes = await pool.query(
+      `SELECT username FROM users WHERE id = $1`,
+    [user_id]
+    );
+    
+    post.username = userRes.rows[0].username;
+
+    return NextResponse.json(post, { status: 201 });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });

@@ -4,13 +4,14 @@ import style from "@/app/chat/globalChat.module.css";
 import Image from "next/image";
 import GlobalChat from "./globalChat/page";
 import { useState, useEffect, useRef } from "react";
-import { io } from "socket.io-client"
+import { io } from "socket.io-client";
 
-const socket = io("http://localhost:3000")
+const socket = io("http://localhost:3000");
 
 export default function ChatHomePage() {
   const [threads, setThreads] = useState([]);
-  const [message, setMessage] = useState("");
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
   const chatEndRef = useRef(null);
 
   // Load messages on mount
@@ -24,43 +25,44 @@ export default function ChatHomePage() {
     loadThreads();
   }, []);
 
-
-  useEffect(() =>{
+  // Socket.IO listener
+  useEffect(() => {
     socket.on("message", (msg) => {
-        setThreads((prev) => [...prev, msg])
-        scrollToBottom
+      setThreads(prev => [...prev, msg]);
+      scrollToBottom();
     });
-    return () => socket.off("massage");
-  }, [])
-
+    return () => socket.off("message");
+  }, []);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-    useEffect(() => {
-        scrollToBottom();
-    }, [threads]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [threads]);
 
   const handleSend = async () => {
-    if (!message.trim()) return;
+    if (!title.trim() && !body.trim()) return;
 
     try {
       const res = await fetch("/api/threads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: message, body: "" }),
+        body: JSON.stringify({ title, body }),
       });
-
       const newThread = await res.json();
-      if (!res.ok) throw new Error(newThread.error || "Failed to send");
 
-      setMessage("");
-      setThreads(prev => [...prev, newThread]); // append to bottom
+      if (!res.ok) throw new Error(newThread.error || "Failed to send");
+      setTitle("");
+      setBody("");
+      setThreads(prev => [...prev, newThread]);
+      socket.emit("message", newThread);
       scrollToBottom();
-    } catch (err) {
+    }catch (err) {
       console.error(err);
       alert(err.message);
-    }
+    };
   };
 
   return (
@@ -70,13 +72,22 @@ export default function ChatHomePage() {
           <GlobalChat threads={threads} chatEndRef={chatEndRef} />
         </div>
         <div className={style.actionContainer}>
-          <input
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-            className={style.placeholder}
-            placeholder="Type a message..."
-            onKeyDown={e => e.key === "Enter" && handleSend()}
-          />
+            <div className={style.inputsContainer}>
+                <input
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                    className={style.inputTitle}
+                    placeholder="Enter title..."
+                    onKeyDown={e => e.key === "Enter" && handleSend()}
+                />
+                <input
+                    value={body}
+                    onChange={e => setBody(e.target.value)}
+                    className={style.inputText}
+                    placeholder="Enter text..."
+                    onKeyDown={e => e.key === "Enter" && handleSend()}
+                />
+            </div>
           <button onClick={handleSend} className={style.button}>
             <Image src={SendIcon} className={style.sendIcon} alt="sendIcon" />
           </button>

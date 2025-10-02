@@ -5,61 +5,87 @@
   height: 95vh;
   width: 100%;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  overflow-y: scroll;
-}
+  background-color: #1c1e21; 
+  overflow: hidden;
 
+}
 
 .chatContainer {
   display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
-  flex: 1;
-  background-color: #0a399800; 
-  padding: 10px;
-  width: 90vw;
-  
+  background-color: #ffffff00; 
+  width: 95vw;
+  height: 98%;
+  gap: 10px;
+
+ 
 }
 
 /* Messages display area */
 .messageDisplay {
-  background-color: #9ba5bb9f;
+  background-color: #61646b9f;
   border-radius: 8px;
-  padding: 10px;
   flex: 1;
   margin-bottom: 10px;
   display: flex;
   justify-content: flex-start;
   align-items: flex-end; 
-  
+  height: 80%; 
 }
-
 /* ====== INPUT AREA ====== */
 .actionContainer {
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: flex-start;
+  height: 50px;
   gap: 10px;
-  background-color: #40444b;
   border-radius: 8px;
   padding: 8px;
 }
-
-/* Input field */
-.placeholder {
-  flex: 1;
-  height: 40px;
-  padding: 0 15px;
-  border: none;
-  border-radius: 20px;
+.inputsContainer{
+  display: flex;
+  flex-direction: column; 
+  padding: 10px;
+  width:85vw;
   background-color: #303339;
-  color: #dcddde;
+  border-radius: 20px;
+  height: 70px;
+}
+/* Input field */
+.inputTitle{
+  height: 25px;
+  border: none;
+  border-radius: 10px;
+  background-color: #303339;
+  color: #b2b2b2;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+.inputText{
+  height: 35px;
+  border: none;
+  border-radius: 10px;
+  background-color: #303339;
+  color: #F1F1F1;
   font-size: 14px;
   transition: background 0.2s;
 }
 
-.placeholder::placeholder {
+.inputTitle, ::placeholder {
+  color: #bbbbbb;
+}
+.inputText::placeholder {
   color: #72767d;
 }
 
-.placeholder:focus {
+.inputTitle:focus {
+  outline: none;
+  background-color: #3a3f44;
+}
+.inputText:focus {
   outline: none;
   background-color: #3a3f44;
 }
@@ -101,20 +127,23 @@
 /* display of comments */
 .commentSection{
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: column;
-  gap: 4rem;
-  width: 90vw;
-  height: 80vh;
-  overflow: scroll;
+  gap: 2rem;
+  width: 95vw;
+  height: 100%;
+  overflow-y: scroll;
+  background-color: #0d1dd000;
+  
 }
 .comments{
-  background-color: rgba(36, 36, 36, 0.294);
+  background-color: rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
   height: auto;
   width: 95%;
-  
+  padding: 1rem;
+  border-radius: 10px;
 }
 .infoSection{
   display: flex;
@@ -124,6 +153,7 @@
   height: 50px;
   width: auto;
   gap: 0.5rem; 
+  
 }
 .profileImageContainer{
   width: 50px;
@@ -158,7 +188,7 @@
   font-size: 12px;
 }
 .titleContainer{
-  background-color: #ffffff19;
+  background-color: #ffffff00;
 }
 .title{
   font-size: 15px;

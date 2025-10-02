@@ -1,10 +1,10 @@
-import {createSever} from "http"
+import {createServer} from "http"
 import { Server } from "socket.io"
 import pool from "@/lib/db"
 
-const httpSever = createSever()
+const httpServer = createServer()
 
-const io = new Server(httpSever, {
+const io = new Server(httpServer, {
     cors: { origin: "*" }
 });
 
@@ -16,7 +16,7 @@ io.on("connection", (socket) => {
         // save to db
         try{
             const result = await pool.query(
-                `INSTER INTO posts (user_id, title, body)
+                `INSERT INTO posts (user_id, title, body)
                 VALUES ($1, $2, $3) RETURNING id, user_id, title, body, created_at`,
                 [msg.user_id, msg.title, msg.body]
             );
@@ -28,7 +28,7 @@ io.on("connection", (socket) => {
             );
             post.username = userRes.rows[0].username
             
-            io.emit("message", result.rows[0]);
+            io.emit("message", post);
         }catch(err){
             console.error("DB error", err)
         }
@@ -38,6 +38,6 @@ io.on("connection", (socket) => {
     });
 });
 
-httpSever.listen(3000, () => {
+httpServer.listen(3000, () => {
     console.log("Socket.IO server running on port 3000")
 })
