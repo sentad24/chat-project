@@ -1,17 +1,17 @@
-
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --blurple: hsl(235, 86%, 65%);
+  --dark-blurple: hsl(234, 48%, 49%);
+  --greyple: hsl(214, 15%, 65%);
+  --dark-bg: hsl(220, 8%, 15%);
+  --darker-bg: hsla(220, 12%, 5%, 0.294);
+  --discord-green: hsl(145, 84%, 65%);
+  --discord-yellow: hsl(52, 99%, 67%);
+  --discord-red: hsl(359, 83%, 59%);
+  --discord-fuchsia: hsl(326, 79%, 57%);
 }
-:root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-}
-
 
 body {
-  background: #ededed;
+  background: var(--darker-bg);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;

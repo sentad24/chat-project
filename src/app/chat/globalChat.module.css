@@ -25,7 +25,7 @@
 
 /* Messages display area */
 .messageDisplay {
-  background-color: #61646b9f;
+  background-color: var(--darker-bg);
   border-radius: 8px;
   flex: 1;
   margin-bottom: 10px;
@@ -178,7 +178,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  width: 160px;
+  width: auto;
   
 }
 .userName{
@@ -186,6 +186,17 @@
 }
 .date{
   font-size: 12px;
+}
+.deleteButton{
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  transition: 0.3s ease;
+}
+.deleteButton:hover{
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  transform: scale(1.1);
+  
 }
 .titleContainer{
   background-color: #ffffff00;

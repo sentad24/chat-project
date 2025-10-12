@@ -5,7 +5,11 @@ import pool from "@/lib/db"
 const httpServer = createServer()
 
 const io = new Server(httpServer, {
-    cors: { origin: "*" }
+    cors: { 
+        origin: "http://localhost:3000", 
+        methods: ["GET" , "POST"],
+    },
+   
 });
 
 io.on("connection", (socket) => {
@@ -38,6 +42,6 @@ io.on("connection", (socket) => {
     });
 });
 
-httpServer.listen(3000, () => {
-    console.log("Socket.IO server running on port 3000")
+httpServer.listen(4000, () => {
+    console.log("Socket.IO server running on port 4000")
 })

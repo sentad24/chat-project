@@ -1,7 +1,7 @@
 .container {
     width: 100px;
     height: 95%;
-    background-color: #202225;
+    background-color:var(--darker-bg);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,7 +9,6 @@
     overflow: hidden;
   }
   .globalAndSingelChats{
-    background-color: #2d7d4600;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -18,7 +17,6 @@
     border-bottom: 1.5px solid #e0e0e084;
   }
   .chanels{
-   background-color: #c2c6cc00;
    padding: 5px;
    height: 70%;
    overflow-y:scroll ;
@@ -35,7 +33,7 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #36393f;
+    background-color: #ffffff1f;
     display: flex;
     align-items: center;
     justify-content: center;

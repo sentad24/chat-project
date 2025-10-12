@@ -15,6 +15,7 @@ export async function GET() {
     console.error(err);
     return NextResponse.json({ error: "Could not fetch posts" }, { status: 500 });
   }
+  
 }
 
 export async function POST(req) {
@@ -56,4 +57,17 @@ export async function POST(req) {
     console.error(err);
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
+  
+}
+
+export async function DELETE(req, res) {
+  if(req.method !== "DELETE") return res.status(405).end()
+
+  const authHeader = req.headers.authorization
+
+  const token = authHeader.split(' ')[1]
+
+
+  console.log(token)
+
 }

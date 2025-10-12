@@ -1,5 +1,7 @@
 "use client";
+import Image from "next/image";
 import style from "@/app/chat/globalChat.module.css";
+import DeleteImg from "@/../public/icons/delete.png"
 
 export default function GlobalChat({ threads, chatEndRef }) {
   return (
@@ -14,6 +16,11 @@ export default function GlobalChat({ threads, chatEndRef }) {
                                 <div className={style.userInfo}>
                                     <div className={style.userName}> {thread.username}</div>
                                     <div className={style.date}>{new Date(thread.created_at).toDateString()}</div>
+                                    <button className={style.deleteButton}>
+                                        <span>
+                                            <Image src={DeleteImg} width={15} height={15} alt="deleteIcon" />
+                                        </span>
+                                    </button>
                                 </div>
                                 <div className={style.titleContainer}>
                                     <div className={style.title}>{thread.title}</div>
