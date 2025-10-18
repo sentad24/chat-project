@@ -20,13 +20,16 @@ export default function SignIn() {
       });
 
       const data = await res.json()
-
+     
       if (res.ok) {
+        localStorage.setItem('token',data.token)
+        
         // Redirect to dashboard after successful login
         window.location.href = "/dashboard";
       } else {
         setError(data.error || "Invalid credentials");
       }
+      
     } catch (err) {
       console.error("Network error:", err);
       setError("Network error. Please try again.");

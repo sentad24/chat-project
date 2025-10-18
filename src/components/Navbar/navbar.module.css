@@ -1,5 +1,5 @@
 .container{
-    background-color:#1E1E2F;
+    background-color:var(--darker-bg);
     display: flex;
     width: 100vw;
     height: 5vh;
@@ -12,4 +12,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.logo, .userInfo {
+    color: #f1f1f1;
 }

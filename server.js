@@ -21,6 +21,13 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
   });
+
+  socket.on("deleteMessage", async ({id}) =>{
+    console.log("message deleted", id)
+    io.emit("deleteMessage", ({id}))
+  })
+
+
 });
 
 // Run the HTTP + Socket.IO server

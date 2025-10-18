@@ -1,6 +1,6 @@
 import pool from "@/lib/db";
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 
 export async function GET() {
   try {
@@ -10,12 +10,13 @@ export async function GET() {
       JOIN users ON posts.user_id = users.id
       ORDER BY posts.created_at ASC
     `);
+    
     return NextResponse.json(res.rows);
+    
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Could not fetch posts" }, { status: 500 });
-  }
-  
+  } 
 }
 
 export async function POST(req) {
@@ -60,14 +61,4 @@ export async function POST(req) {
   
 }
 
-export async function DELETE(req, res) {
-  if(req.method !== "DELETE") return res.status(405).end()
 
-  const authHeader = req.headers.authorization
-
-  const token = authHeader.split(' ')[1]
-
-
-  console.log(token)
-
-}

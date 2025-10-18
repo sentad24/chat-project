@@ -3,12 +3,12 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #5C95AE;
+    background: var(--darker-bg);
     font-family: 'Arial', sans-serif;
   }
   
   .form {
-    background: #a4c5f751;
+    background: #a4c5f720;
     padding: 40px 30px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);

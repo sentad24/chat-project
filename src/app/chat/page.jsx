@@ -56,7 +56,6 @@ export default function ChatHomePage() {
       if (!res.ok) throw new Error(newThread.error || "Failed to send");
       setTitle("");
       setBody("");
-      setThreads(prev => [...prev, newThread]);
       socket.emit("message", newThread);
       scrollToBottom();
     }catch (err) {
