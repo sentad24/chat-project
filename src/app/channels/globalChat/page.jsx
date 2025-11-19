@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import style from "@/app/chat/globalChat.module.css";
+import style from "@/app/channels/globalChat.module.css";
 import DeleteImg from "@/../public/icons/delete.png";
 import { getSession} from "next-auth/react"
 import { useEffect, useState, useRef } from "react";

@@ -1,6 +1,6 @@
 "use client";
 import SendIcon from "@/../public/icons/send-message.png"
-import style from "@/app/chat/globalChat.module.css";
+import style from "@/app/channels/globalChat.module.css";
 import Image from "next/image";
 import GlobalChat from "./globalChat/page";
 import { useState, useEffect, useRef } from "react";

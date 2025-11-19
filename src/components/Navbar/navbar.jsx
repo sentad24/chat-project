@@ -1,7 +1,7 @@
 'use client'
 import style from "./navbar.module.css"
 
-export default function Navbar() {
+export default function Navbar({ user }) {
     return(
        <div>
         <nav> 

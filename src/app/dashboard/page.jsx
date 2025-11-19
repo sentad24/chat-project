@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/dist/server/api-utils";
 import jwt from "jsonwebtoken";
-import ChatLayout from "@/app/chat/layout"
+import ChatLayout from "@/app/channels/layout"
 import style from "@/components/Navbar/navbar.module.css"
 
 export default async function DashboardPage() {

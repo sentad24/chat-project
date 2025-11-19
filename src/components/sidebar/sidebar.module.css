@@ -1,11 +1,12 @@
 .container {
     width: 100px;
-    height: 95%;
+    height:95vh;
     background-color:var(--darker-bg);
+    
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 15px 0;
+    padding: 0px 5px;
     overflow: hidden;
   }
   .globalAndSingelChats{
@@ -15,10 +16,11 @@
     gap: 0.5rem;
     padding: 5px;
     border-bottom: 1.5px solid #e0e0e084;
+    
   }
   .chanels{
    padding: 5px;
-   height: 70%;
+   height:66vh;
    overflow-y:scroll ;
    scrollbar-width: none;
    display: flex;
@@ -42,6 +44,7 @@
     font-size: 14px;
     transition: background 0.2s, border-radius 0.2s,0.4s ease;
     cursor: pointer;
+    border: none;
   }
   .icons{
     width: 30px;
