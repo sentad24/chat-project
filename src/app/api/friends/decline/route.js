@@ -8,18 +8,18 @@ export async function POST(req) {
       return new Response(JSON.stringify({ error: 'Missing user IDs' }), { status: 400 });
     }
 
-    const result = await pool.friendships.update({
-      where: {
-        sender_id_receiver_id: { sender_id: senderId, receiver_id: receiverId } // composite unique key
-      },
-      data: {
-        status: 'declined'
-      }
-    });
+    const result = await pool.query(
+      `UPDATE friendships
+       SET status = 'declined'
+       WHERE sender_id = $1 AND receiver_id = $2
+       RETURNING *`,
+      [senderId, receiverId]
+    );
 
-    return new Response(JSON.stringify({ message: 'Friend request declined', friendship: result }), {
+    return new Response(JSON.stringify({ message: 'Friend request declined', friendship: result.rows[0] }), {
       status: 200
     });
+
   } catch (error) {
     console.error(error);
     return new Response(JSON.stringify({ error: 'Something went wrong' }), { status: 500 });

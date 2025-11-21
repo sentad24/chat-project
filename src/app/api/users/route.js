@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(){
     try{
-       const res = await pool.query(` SELECT username FROM users`) 
+       const res = await pool.query(` SELECT id, username FROM users`) 
        return NextResponse.json(res.rows)
 
     } catch(err){
