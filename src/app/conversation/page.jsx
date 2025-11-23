@@ -6,7 +6,7 @@ import {jwtDecode} from "jwt-decode";
 
 export default async function ConversationPage() {
   // Await cookies() in async server component
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get("authToken")?.value || null;
 
   let currentUser = null;
