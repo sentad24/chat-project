@@ -1,10 +1,10 @@
 'use client'
 import { useEffect, useState } from "react"
-import FriendRequestButton from "../FriendRequestButton/FriendRequestButton"
+import FriendRequestButton from "@/app/conversation/[directID]/FriendRequestButton/FriendRequestButton"
+import Style from "@/app/conversation/conversation.module.css"
 
-import Style from "../../conversation.module.css"
 
-export default function DirectIdClient({currentUser}){
+export default function DirectIdClient({currentUser, conversationId}){
     currentUser = currentUser ?? {}
     const [activeTab,setActiveTab] = useState("friends")
     const [searchQuery, setSearchQuery] = useState("")
@@ -28,7 +28,6 @@ export default function DirectIdClient({currentUser}){
     useEffect(()=> {
         async function loadRequests(){
             if(!currentUser?.id ) return;
-
             const res = await fetch(`/api/friends/request?userId=${currentUser.id}`)
             const data = await res.json()
             setRequests(data)
@@ -71,17 +70,43 @@ export default function DirectIdClient({currentUser}){
         });
         setRequests(reqs => reqs.filter(r => r.sender_id !== senderId || r.receiver_id !== receiverId));
     }
+    async function startConversation(friendId) {
+        if (!currentUser?.id) return
+    
+        const res = await fetch("/api/conversation/start", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            user1: currentUser.id, 
+            user2: friendId }),
+        })
+    
+        const data = await res.json()
+        if (data?.id) {
+             window.location.href = `/conversation/${data.id}`
+        }
+    }
 
-    const filterList = (list) => 
-        list.filter(user => 
-            user?.username?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+
+    const filterList = (list) =>
+        list.filter(f => {
+          const username =
+            f.sender_id === currentUser.id
+              ? f.receiver_username
+              : f.sender_username;
+          return username.toLowerCase().includes(searchQuery.toLowerCase());
+        });
+    const filterUsers = (list, searchQuery = "") =>
+        list.filter(u => {
+            if (!u.username || typeof u.username !== "string") return false;
+            return u.username.toLowerCase().includes(searchQuery.toLowerCase());
+        });
+                
     
 
  return(
-    <div>
+    <>
         <section className={Style.directSection}>
-            <div className={Style.searchFriendsSection}>
                 <div className={Style.inputBarContainer}>
                     <input className={Style.inputBar}  
                         type="text" 
@@ -90,41 +115,62 @@ export default function DirectIdClient({currentUser}){
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
-            </div>
             <div className={Style.friendTabsBtns}>
-                <button onClick={()=> setActiveTab("friends")}>My Friends</button>
-                <button onClick={()=> setActiveTab("addFriends")}>Add Frindes</button>
-                <button onClick={()=> setActiveTab("requests")}>Requests</button>
+                <button className={Style.friendTabsBtn} onClick={()=> setActiveTab("friends")}>My Friends</button>
+                <button className={Style.friendTabsBtn} onClick={()=> setActiveTab("addFriends")}>Add Frindes</button>
+                <button className={Style.friendTabsBtn} onClick={()=> setActiveTab("requests")}>Requests</button>
                 
             </div>
-            <main className={Style.dispalyUsers}>
+            <main className={Style.mainContainerDisplayUsers}>
                 {activeTab === "friends" && (
-                    <div>
+                    <div className={Style.friendsSection}>
                         <h2>Friends</h2>
+
                         {friends.length === 0 && <p>No friends yet</p>}
-                        <ul>
-                            {friends.map(f => {
-                                const friendUsername =
-                                f.sender_id === currentUser.id ? f.receiver_username : f.sender_username;
-                                return <li key={f.id}>{friendUsername}</li>;
-                            })}
-                        </ul>
+                        
+                        {filterList(friends).map((f, index) => {
+                            const friendId =
+                            f.sender_id === currentUser.id ? f.receiver_id : f.sender_id;
+
+                            const friendUsername =
+                            f.sender_id === currentUser.id
+                                ? f.receiver_username
+                                : f.sender_username;
+
+                            return (
+                            <li key={f.id ?? index} className={Style.friendListItem}>
+                                <div
+                                className={Style.friendButton}
+                                onClick={() => startConversation(friendId)}
+                                role="button"
+                                tabIndex={0}
+                                >
+                                    <div className={Style.profilImg}></div>
+                                    <span className={Style.friendName}>{friendUsername}</span>
+                                </div>
+                            </li>
+                            );
+                        })}
+                        
                     </div>
                 )}
 
+
                 {activeTab === "addFriends" && (
-                    <div>
+                    <div className={Style.addFriendsSection}>
                         <h2> Add friends</h2>
                         
                         {!currentUser?.id ? ( <p>You must be logged in to send a friend request</p> ) : (
-                            filterList(findUsers).map((u, index) => (
+                            filterUsers(findUsers).map((u, index) => (
                                 <div key={u.id ?? index}>
+                                    
                                     <li>{u.username}</li>
                                     <FriendRequestButton
                                         senderId={currentUser.id}
                                         receiverId={u.id}
                                     />
                                 </div>
+                                
                             ))
                         )}
                     </div>
@@ -147,7 +193,7 @@ export default function DirectIdClient({currentUser}){
             </main>
         </section>
 
-    </div>
+    </>
     
  )
 }

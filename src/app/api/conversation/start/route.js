@@ -1,9 +1,11 @@
 import pool from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export default async function POST(req) {
-    const {user1, user2} = await req.json()
+export async function POST(req) {
 
+    const {user1, user2} = await req.json()
+    console.log("startConversation input:", user1, user2)
+    
     try{
         const existing = await pool.query(
         `SELECT * FROM conversations 

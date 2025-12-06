@@ -14,16 +14,3 @@ export async function POST(req) {
   return NextResponse.json(result.rows[0]);
 }
 
-
-export async function GET(req) {
-    const conversationId = req.nextUrl.searchParams.get("conversationId");
-  
-    const result = await pool.query(
-      `SELECT * FROM messages
-       WHERE conversation_id=$1
-       ORDER BY created_at ASC`,
-      [conversationId]
-    );
-  
-    return NextResponse.json(result.rows);
-  }

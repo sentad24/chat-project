@@ -1,18 +1,28 @@
-import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
-import DirectIdClient from "./directIdClient/page";
+import { jwtDecode } from "jwt-decode";
+import ChatDisplay from "../components/ChatDisplay";
 
-export default function DirectIdPage(){
-    const token = cookies().get("authToken")?.value || null
+export default async function ChatPage({ params, }) {
 
-    let currentUser = null
+  const conversationId = params?.directID;
+ 
+  const cookieStore = await cookies();
+  const token = cookieStore.get("authToken")?.value || null;
 
-    if(token){
-        try{
-            currentUser = jwtDecode(token)
-        } catch(err) {
-            console.error('Invalid token:', err)
-        }
+  let currentUser = null;
+  if (token) {
+    try {
+      currentUser = jwtDecode(token);
+    } catch (err) {
+      /* eslint-disable */ console.error("Invalid token", err);
     }
-    return <DirectIdClient currentUser={currentUser} />
+  }
+
+  if (!conversationId) {
+    return <div>Select a conversation</div>;
+  }
+
+  return (
+    <ChatDisplay currentUser={currentUser} conversationId={conversationId} />
+  );
 }
