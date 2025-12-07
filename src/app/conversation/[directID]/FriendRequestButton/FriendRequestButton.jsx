@@ -1,50 +1,58 @@
 "use client"
-
+import style from "./FriendRequestButton.module.css"
+import Image from "next/image"
 import { useState } from "react"
 
-export default function FriendRequestButton({senderId, receiverId}){
+export default function FriendRequestButton({ senderId, receiverId, onRequestSent }) {
     const [loading, setLoading] = useState(false)
+    const [sent, setSent] = useState(false)
     const [status, setStatus] = useState("")
 
     const sendRequest = async () => {
+        if (sent) return
+
         setLoading(true)
         setStatus("")
-    
-        try{
+
+        try {
             const res = await fetch("/api/friends/request", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({senderId,receiverId})
-            });
-    
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ senderId, receiverId })
+            })
+
             const data = await res.json()
-            
+           
+
             if (res.ok) {
-                setStatus("Friend request sent!");
+                setSent(true)
+                setStatus("Friend request sent!")
+                // Notify parent to update sentRequests
+                socket?.emit("friend_request_sent", { senderId, receiverId });
+                onRequestSent?.(receiverId)
             } else {
-                setStatus("Error: " + data.error);
+                setStatus("Error: " + data.error)
             }
-    
-        } catch(error){
+
+        } catch (error) {
             setStatus("Error sending request")
         }
-    
-            setLoading(false)
-        }
 
-        return (
-            <div>
-                
-              <button onClick={sendRequest} disabled={loading}>
-                {loading ? "Sending..." : "Add Friend"}
-              </button>
-              {status && <p>{status}</p>}
-            </div>
-          );
+        setLoading(false)
+    }
 
-
+    return (
+        <div className={style.container}>
+            <button className={style.btn} onClick={sendRequest} disabled={loading}>
+                {loading ? (
+                    "..."
+                ) : sent ? (
+                    <Image src="/icons/mark.png" alt="check icon" width={20} height={20} />
+                ) : (
+                    <Image src="/icons/add-user.png" alt="add user icon" width={20} height={20} />
+                )}
+            </button>
+            
+        </div>
+    )
 }
-
-

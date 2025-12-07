@@ -11,6 +11,7 @@ const io = new Server(httpServer, {
     },
    
 });
+const onlineUsers = new Map();
 
 io.on("connection", (socket) => {
     console.log("User connectde:", socket.id);
@@ -37,9 +38,39 @@ io.on("connection", (socket) => {
             console.error("DB error", err)
         }
     })
-    socket.io("disconnect", () => {
+    socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id)
     });
+
+    io.on("connection", (socket) => {
+        console.log("User connected:", socket.id);
+    
+        socket.on("register", (userId) => {
+            onlineUsers.set(userId, socket.id);
+        });
+    
+        socket.on("friend_request_sent", ({ senderId, receiverId }) => {
+            // Notify receiver if online
+            const receiverSocketId = onlineUsers.get(receiverId);
+            if (receiverSocketId) {
+                io.to(receiverSocketId).emit("new_friend_request", { fromId: senderId });
+            }
+    
+            // Notify sender to refresh their available users
+            const senderSocketId = onlineUsers.get(senderId);
+            if (senderSocketId) {
+                io.to(senderSocketId).emit("refresh_available_users");
+            }
+        });
+    
+        socket.on("disconnect", () => {
+            for (const [userId, sId] of onlineUsers.entries()) {
+                if (sId === socket.id) onlineUsers.delete(userId);
+            }
+        });
+    });
+
+
 });
 
 httpServer.listen(4000, () => {

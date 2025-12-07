@@ -54,47 +54,47 @@
   color: #F1F1F1;
 }
 .actionContainer{
-    background-color: rgba(0, 255, 255, 0);
-    padding: 10px;
-    width: 100%;
+  background-color: rgba(0, 255, 255, 0);
+  padding: 10px;
+  width: 100%;
 }
 .actionContainer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
-  .inputText{
-    height: 35px;
-    width: 95%;
-    border: none;
-    border-radius: 10px;
-    background-color: #303339;
-    color: #F1F1F1;
-    font-size: 14px;
-    transition: background 0.2s;
-  }
+ .inputText{
+  height: 35px;
+  width: 95%;
+  border: none;
+  border-radius: 10px;
+  background-color: #303339;
+  color: #F1F1F1;
+  font-size: 14px;
+  transition: background 0.2s;
+ }
   
-  .inputText::placeholder {
-    color: #72767d;
-  }
-  
-  .inputTitle:focus {
-    outline: none;
-    background-color: #3a3f44;
-  }
-  .inputText:focus {
-    outline: none;
-    background-color: #3a3f44;
-  }
-  
-  /* Send button */
-  .button {
-    width: 40px;
-    height: 40px;
-    background-color: #6eb3d1; 
-    border: none;
-    border-radius: 50%;
+ .inputText::placeholder {
+   color: #72767d;
+ }
+ 
+ .inputTitle:focus {
+   outline: none;
+   background-color: #3a3f44;
+ }
+ .inputText:focus {
+   outline: none;
+   background-color: #3a3f44;
+ }
+ 
+ /* Send button */
+ .button {
+   width: 40px;
+   height: 40px;
+   background-color: #6eb3d1; 
+   border: none;
+   border-radius: 50%;
     color: white;
     font-size: 18px;
     font-weight: bold;

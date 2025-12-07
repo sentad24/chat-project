@@ -3,7 +3,7 @@ import pool from "@/lib/db";
 
 export async function GET(req, context) {
   try {
-    const conversationId = context?.params?.conversationId;
+    const {conversationId} = await context.params
     console.log("DEBUG: conversationId =", conversationId);
 
     if (!conversationId) {

@@ -12,7 +12,7 @@ export default function Sidebar(){
             <div className={style.globalAndSingelChats}>
 
                     <button className={style.chat}><a href="/dashboard"> <Image className={style.icons} alt="worldIcon" src={WorldIcon}/></a></button>
-                    <button className={style.chat}><a href="/conversation"> <Image className={style.icons} alt="userIcon" src={UserIcon}/></a></button>
+                    <button className={style.chat}><a href="/conversation/home"> <Image className={style.icons} alt="userIcon" src={UserIcon}/></a></button>
                 </div>
 
             <div className={style.chanels}>

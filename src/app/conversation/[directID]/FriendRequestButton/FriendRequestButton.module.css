@@ -1,0 +1,11 @@
+
+.btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out; 
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}

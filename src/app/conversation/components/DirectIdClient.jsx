@@ -1,8 +1,12 @@
 'use client'
 import { useEffect, useState } from "react"
 import FriendRequestButton from "@/app/conversation/[directID]/FriendRequestButton/FriendRequestButton"
+import { io } from "socket.io-client"
 import Style from "@/app/conversation/conversation.module.css"
 
+const socket = io("http://localhost:4000",{
+    withCredentials: false,
+});
 
 export default function DirectIdClient({currentUser, conversationId}){
     currentUser = currentUser ?? {}
@@ -11,19 +15,28 @@ export default function DirectIdClient({currentUser, conversationId}){
     const [findUsers,setFindeUsers] = useState([])
     const [requests, setRequests] = useState([])
     const [friends, setFriends] = useState([])
+    const [loadRequests,setLoadRequests] = useState ([])
     
-    
-    useEffect(()=>{
-        async function loadUsers() {
-            const res = await fetch("/api/users")
-            const data = await res.json() 
-            setFindeUsers(data)
+   
+    useEffect(() => {
+        async function loadAvailableUsers() {
+          if (!currentUser?.id) return;
+      
+          const res = await fetch(`/api/users/available?userId=${currentUser.id}`);
+          if (!res.ok) return;
+      
+          const data = await res.json();
+          setFindeUsers(data); 
         }
-        loadUsers()
-    }, [])
+      
+        loadAvailableUsers();
+      }, [currentUser]);
+      
     useEffect(() => {
         console.log("Loaded users:", findUsers)
     }, [findUsers])
+
+    
 
     useEffect(()=> {
         async function loadRequests(){
@@ -97,10 +110,8 @@ export default function DirectIdClient({currentUser, conversationId}){
           return username.toLowerCase().includes(searchQuery.toLowerCase());
         });
     const filterUsers = (list, searchQuery = "") =>
-        list.filter(u => {
-            if (!u.username || typeof u.username !== "string") return false;
-            return u.username.toLowerCase().includes(searchQuery.toLowerCase());
-        });
+        list.filter(u => u.username.toLowerCase().includes(searchQuery.toLowerCase()));
+          
                 
     
 
@@ -162,12 +173,13 @@ export default function DirectIdClient({currentUser, conversationId}){
                         
                         {!currentUser?.id ? ( <p>You must be logged in to send a friend request</p> ) : (
                             filterUsers(findUsers).map((u, index) => (
-                                <div key={u.id ?? index}>
-                                    
-                                    <li>{u.username}</li>
+                                <div className={Style.findeUsersSection} key={u.id ?? index}>
+                                    <div className={Style.profilImg}></div>
+                                    <li className={Style.findUserName}>{u.username}</li>
                                     <FriendRequestButton
                                         senderId={currentUser.id}
                                         receiverId={u.id}
+                                
                                     />
                                 </div>
                                 
