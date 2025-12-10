@@ -27,9 +27,9 @@ export default function FriendRequestButton({ senderId, receiverId, onRequestSen
             if (res.ok) {
                 setSent(true)
                 setStatus("Friend request sent!")
-                // Notify parent to update sentRequests
-                socket?.emit("friend_request_sent", { senderId, receiverId });
-                onRequestSent?.(receiverId)
+                setTimeout(()=>{
+                    if (onRequestSent) onRequestSent()
+                },3000)
             } else {
                 setStatus("Error: " + data.error)
             }

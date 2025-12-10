@@ -4,9 +4,7 @@ import FriendRequestButton from "@/app/conversation/[directID]/FriendRequestButt
 import { io } from "socket.io-client"
 import Style from "@/app/conversation/conversation.module.css"
 
-const socket = io("http://localhost:4000",{
-    withCredentials: false,
-});
+
 
 export default function DirectIdClient({currentUser, conversationId}){
     currentUser = currentUser ?? {}
@@ -15,7 +13,7 @@ export default function DirectIdClient({currentUser, conversationId}){
     const [findUsers,setFindeUsers] = useState([])
     const [requests, setRequests] = useState([])
     const [friends, setFriends] = useState([])
-    const [loadRequests,setLoadRequests] = useState ([])
+   
     
    
     useEffect(() => {
@@ -109,8 +107,11 @@ export default function DirectIdClient({currentUser, conversationId}){
               : f.sender_username;
           return username.toLowerCase().includes(searchQuery.toLowerCase());
         });
-    const filterUsers = (list, searchQuery = "") =>
-        list.filter(u => u.username.toLowerCase().includes(searchQuery.toLowerCase()));
+    const filterUsers = (list, searchQuery = "") => list.filter(u => u.username.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    function removeUser(userId){
+        setFindeUsers(perv => perv.filter(u => u.id !== userId))
+    }
           
                 
     
@@ -179,7 +180,7 @@ export default function DirectIdClient({currentUser, conversationId}){
                                     <FriendRequestButton
                                         senderId={currentUser.id}
                                         receiverId={u.id}
-                                
+                                        onRequestSent={() => removeUser(u.id)}
                                     />
                                 </div>
                                 
@@ -193,14 +194,17 @@ export default function DirectIdClient({currentUser, conversationId}){
                         {requests.length === 0 && <p>No pending requests</p>}
 
                         {requests.map((req,index) => (
-                            <div key={req.id ?? index}>
-                                <p>{req.username} wants to be your friend</p>
-                                <button onClick={() => acceptRequest(req.sender_id, currentUser.id)}>Accept</button>
-                                <button onClick={() => declineRequest(req.sender_id, currentUser.id)}>Decline</button>
+                           
+                            <div className={Style.friendReqContainer} key={req.id ?? index}>
+                                <p className={Style.friReqName}>{req.username}</p>
+                                <div className={Style.btnsSection}>
+                                    <button className={Style.actBtn} onClick={() => acceptRequest(req.sender_id, currentUser.id)}>Accept</button>
+                                    <button className={Style.decBtn} onClick={() => declineRequest(req.sender_id, currentUser.id)}>X</button>
+                                </div>
                             </div>
                         ))}
                     </div>
-                    )}
+                )}
 
             </main>
         </section>

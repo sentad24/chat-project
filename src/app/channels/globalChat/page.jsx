@@ -18,7 +18,6 @@ export default function GlobalChat({ threads, initialComments}) {
         
     },[threads,initialComments])
 
-    // console.log("threads:", threads, "initialComments:", initialComments, "threadState:", threadState)
 
 
     useEffect(() => {
