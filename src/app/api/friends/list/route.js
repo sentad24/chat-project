@@ -10,16 +10,22 @@ export async function GET(req) {
   try {
     const res = await pool.query(
       `
-      SELECT f.id,
-             f.sender_id,
-             f.receiver_id,
-             f.status,
-             u1.username AS sender_username,
-             u2.username AS receiver_username
+      SELECT 
+          f.id,
+          f.status,
+          CASE 
+              WHEN f.sender_id = $1 THEN f.receiver_id
+              ELSE f.sender_id
+          END AS friend_id,
+          CASE 
+              WHEN f.sender_id = $1 THEN u2.username
+              ELSE u1.username
+          END AS friend_username
       FROM friendships f
       JOIN users u1 ON f.sender_id = u1.id
       JOIN users u2 ON f.receiver_id = u2.id
-      WHERE f.status = 'accepted' AND (f.sender_id=$1 OR f.receiver_id=$1)
+      WHERE f.status = 'accepted'
+        AND (f.sender_id = $1 OR f.receiver_id = $1)
       `,
       [userId]
     );

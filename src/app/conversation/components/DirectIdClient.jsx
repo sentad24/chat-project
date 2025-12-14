@@ -101,18 +101,24 @@ export default function DirectIdClient({currentUser, conversationId}){
 
     const filterList = (list) =>
         list.filter(f => {
-          const username =
-            f.sender_id === currentUser.id
-              ? f.receiver_username
-              : f.sender_username;
+          const username = f.friend_username || "";
           return username.toLowerCase().includes(searchQuery.toLowerCase());
         });
-    const filterUsers = (list, searchQuery = "") => list.filter(u => u.username.toLowerCase().includes(searchQuery.toLowerCase()));
+      
+
+
+    const filterUsers = (list) => 
+        list.filter(f => (f.friend_username || "").toLowerCase().includes(searchQuery.toLowerCase()));
 
     function removeUser(userId){
         setFindeUsers(perv => perv.filter(u => u.id !== userId))
     }
-          
+    const uniqueFriends = friends.filter(
+        (f, index, self) =>
+          index === self.findIndex(
+            t => t.friend_id === f.friend_id
+          )
+    );
                 
     
 
@@ -128,9 +134,9 @@ export default function DirectIdClient({currentUser, conversationId}){
                     />
                 </div>
             <div className={Style.friendTabsBtns}>
-                <button className={Style.friendTabsBtn} onClick={()=> setActiveTab("friends")}>My Friends</button>
-                <button className={Style.friendTabsBtn} onClick={()=> setActiveTab("addFriends")}>Add Frindes</button>
-                <button className={Style.friendTabsBtn} onClick={()=> setActiveTab("requests")}>Requests</button>
+                <button className={`${Style.friendTabsBtn} ${activeTab === "friends" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("friends")}>My Friends</button>
+                <button className={`${Style.friendTabsBtn} ${ activeTab === "addFriends" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("addFriends")}>Add Frindes</button>
+                <button className={`${Style.friendTabsBtn} ${ activeTab === "requests" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("requests")}>Requests</button>
                 
             </div>
             <main className={Style.mainContainerDisplayUsers}>
@@ -140,29 +146,19 @@ export default function DirectIdClient({currentUser, conversationId}){
 
                         {friends.length === 0 && <p>No friends yet</p>}
                         
-                        {filterList(friends).map((f, index) => {
-                            const friendId =
-                            f.sender_id === currentUser.id ? f.receiver_id : f.sender_id;
-
-                            const friendUsername =
-                            f.sender_id === currentUser.id
-                                ? f.receiver_username
-                                : f.sender_username;
-
-                            return (
-                            <li key={f.id ?? index} className={Style.friendListItem}>
-                                <div
-                                className={Style.friendButton}
-                                onClick={() => startConversation(friendId)}
-                                role="button"
-                                tabIndex={0}
-                                >
-                                    <div className={Style.profilImg}></div>
-                                    <span className={Style.friendName}>{friendUsername}</span>
-                                </div>
-                            </li>
-                            );
-                        })}
+                        {filterList(uniqueFriends).map(f => (
+                        <li key={f.friend_id} className={Style.friendListItem}>
+                            <div
+                            className={Style.friendButton}
+                            onClick={() => startConversation(f.friend_id)}
+                            role="button"
+                            tabIndex={0}
+                            >
+                            <div className={Style.profilImg}></div>
+                            <span className={Style.friendName}>{f.friend_username}</span>
+                            </div>
+                        </li>
+                        ))}
                         
                     </div>
                 )}
@@ -196,7 +192,11 @@ export default function DirectIdClient({currentUser, conversationId}){
                         {requests.map((req,index) => (
                            
                             <div className={Style.friendReqContainer} key={req.id ?? index}>
-                                <p className={Style.friReqName}>{req.username}</p>
+                                
+                                <div className={Style.imgAndName}>
+                                    <div className={Style.profilImg}></div>
+                                    <p className={Style.friReqName}>{req.username}</p>
+                                </div>
                                 <div className={Style.btnsSection}>
                                     <button className={Style.actBtn} onClick={() => acceptRequest(req.sender_id, currentUser.id)}>Accept</button>
                                     <button className={Style.decBtn} onClick={() => declineRequest(req.sender_id, currentUser.id)}>X</button>
