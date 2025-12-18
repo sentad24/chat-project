@@ -31,7 +31,7 @@ export default async function ConversationLayout({ children }) {
 
       <div className={style.sideAndChatSection}>
         <aside>
-          <Sidebar />
+          <Sidebar currentUser={currentUser}  />
         </aside>
 
         <main className={style.mainPanel}>

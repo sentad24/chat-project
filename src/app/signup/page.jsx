@@ -4,12 +4,13 @@ import styles from "@/app/AuthForm.module.css"
 import Link from "next/link";
 
 
-export default function SignUp() {
+export default function SignUp({setCurrentUser}) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -24,7 +25,9 @@ export default function SignUp() {
 
     const data = await res.json()
 
-    if (res.ok) {
+    if (res.ok && data.user) {
+
+      // setCurrentUser(data.user);
       setSuccess("Account created! Redirecting to sign in...");
       setTimeout(() => {
         window.location.href = "/dashboard";

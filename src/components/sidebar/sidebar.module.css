@@ -94,20 +94,102 @@
     border-radius: 16px;
   }
   .createFromContainer{
-    width: 40rem;
-    height: 40rem;
+    width: 35rem;
+    height: 35rem;
     background-color: #6eb3d1;
     color: #313131;
     position: fixed;
-    top: 30;
-    left: 400;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    z-index: 1000;
   }
-  .closeContainer{
-    padding: 0;
-    margin: 0;
+  .createFromContainer form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 0.75rem;
   }
-  .closeBtn{
-    background-color: red;
+  .createFromContainer label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  
+  .createFromContainer input[type="text"] {
+    padding: 0.6rem 0.7rem;
+    border-radius: 8px;
     border: none;
+    outline: none;
+    font-size: 0.95rem;
   }
+  .friendsList {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 0.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .friendItem {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  .friendItem:hover {
+    background-color: #e6f2f8;
+  }
+  
+  .friendItem input {
+    cursor: pointer;
+  }
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+  }
+  .createBtn {
+    background-color: #313131;
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  
+  .createBtn:disabled {
+    background-color: #777;
+    cursor: not-allowed;
+  }
+  .cancelBtn {
+    background: transparent;
+    border: 1px solid #313131;
+    color: #313131;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .cancelBtn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  .username{
+    color: #313131;
+  }
+  .friendsList li {
+    list-style: none; /* remove default bullets */
+    color: #000; /* ensure text is visible */
+    padding: 0.5rem 0;
+  }
+  
   

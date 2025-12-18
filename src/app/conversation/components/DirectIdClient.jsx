@@ -31,7 +31,6 @@ export default function DirectIdClient({currentUser, conversationId}){
       }, [currentUser]);
       
     useEffect(() => {
-        console.log("Loaded users:", findUsers)
     }, [findUsers])
 
     
@@ -45,6 +44,7 @@ export default function DirectIdClient({currentUser, conversationId}){
         }
         loadRequests()
     },[currentUser])
+    
     useEffect(()=> {
      async function loadFriends(){
         if (!currentUser?.id) return;
