@@ -16,21 +16,25 @@ export default  function Sidebar({currentUser}){
           if (!currentUser?.id) return;
     
           try {
-            const res = await fetch(`/api/friends/list?userId=${currentUser.id}`);
+            const res = await fetch(`/api/friends/list?userId=${currentUser.id}`,{credentials:"include"});
             if (!res.ok) {
               console.error("Failed to fetch friends:", res.status, await res.text());
               return;
             }
             const data = await res.json();
             setFriends(Array.isArray(data) ? data : []);
-            console.log(data)
           } catch (err) {
             console.error("Error fetching friends:", err);
           }
         }
     
         loadFriends();
-      }, [currentUser]);
+    }, [currentUser?.id]);
+
+    useEffect(() => {
+        console.log("Current user in Sidebar:", currentUser);
+        
+    }, [currentUser]);
 
    
     
@@ -43,49 +47,6 @@ export default  function Sidebar({currentUser}){
 
             <div className={style.groupChatsContainer}>
                 <div className={style.groupChat}><h1>SN</h1></div>
-                
-           </div>
-           <div className={style.add}>
-
-                <button className={style.addBtn} onClick={()=>{ setActive(true)}}>
-                    <h1>+</h1>
-                </button>
-                <div>
-                    {active === true && (
-                        <div className={style.createFromContainer}>
-                            
-                            <form action="">
-                                <label>Create groupChat</label>
-                                <input  
-                                    type="text"
-                                    placeholder="Enter a name..."
-                                        
-                                />
-                                <h3>Add friends</h3>
-
-                                <div className={style.friendsList}>
-                                    {friends.map((f) => (
-                                        <div key={f.id} className={style.friendItem}>
-                                        <label>
-                                            <input type="checkbox" value={f.friend_id} />
-                                            {f.friend_username}
-                                        </label>
-                                        </div>
-                                    ))}
-                                </div>
-
-                               
-                                <div className={style.actions}>
-                                    <button type="button" className={style.cancelBtn} onClick={() => setActive(false)}> Cancel</button>
-                                    <button type="submit" className={style.createBtn}> Create</button>
-                                </div>
-                            </form>
-                            
-
-                            
-                        </div>
-                    )}
-                </div>
             </div>
         </div>
     )

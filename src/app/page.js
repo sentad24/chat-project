@@ -7,9 +7,6 @@ export default function Home() {
   return (
     <div className="container">
       <LoginFrom/>
-      {/* <SignIn/> */}
     </div>
-    
- 
   );
 }

@@ -1,10 +1,8 @@
 'use client'
 import { useEffect, useState } from "react"
 import FriendRequestButton from "@/app/conversation/[directID]/FriendRequestButton/FriendRequestButton"
-import { io } from "socket.io-client"
 import Style from "@/app/conversation/conversation.module.css"
-
-
+import { redirect } from "next/navigation"
 
 export default function DirectIdClient({currentUser, conversationId}){
     currentUser = currentUser ?? {}
@@ -13,6 +11,11 @@ export default function DirectIdClient({currentUser, conversationId}){
     const [findUsers,setFindeUsers] = useState([])
     const [requests, setRequests] = useState([])
     const [friends, setFriends] = useState([])
+    const [selectedFriends, setSelectedFriends] = useState([]);
+    const [groupName, setGroupName]= useState("")
+
+    
+
    
     
    
@@ -117,8 +120,31 @@ export default function DirectIdClient({currentUser, conversationId}){
         (f, index, self) =>
           index === self.findIndex(
             t => t.friend_id === f.friend_id
-          )
+        )
     );
+    const toggleFriend = (id) => {
+        setSelectedFriends((prev) =>
+          prev.includes(id)
+            ? prev.filter((f) => f !== id) 
+            : [...prev, id]               
+        );
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const res = await fetch("/api/groups/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+
+            body: JSON.stringify({ name: groupName, members:selectedFriends,createdBy: currentUser.id,})
+        })
+        if(res.ok) {
+            const data = await res.json()
+            redirect(`/channels/group/${data.groupId}`)
+        } else {
+            alert("Failed to create group")
+        }
+    }
                 
     
 
@@ -134,10 +160,11 @@ export default function DirectIdClient({currentUser, conversationId}){
                     />
                 </div>
             <div className={Style.friendTabsBtns}>
-                <button className={`${Style.friendTabsBtn} ${activeTab === "friends" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("friends")}>My Friends</button>
-                <button className={`${Style.friendTabsBtn} ${ activeTab === "addFriends" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("addFriends")}>Add Frindes</button>
-                <button className={`${Style.friendTabsBtn} ${ activeTab === "requests" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("requests")}>Requests</button>
-                
+                <button className={`${Style.friendTabsBtn} ${activeTab === "friends" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("friends")}><span> <img src="/icons/friends.png" style={{height:'20px'}} /></span></button>
+                <button className={`${Style.friendTabsBtn} ${ activeTab === "addFriends" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("addFriends")}><span><img src="/icons/add-friend.png"style={{height:'20px'}}/></span></button>
+                <button className={`${Style.friendTabsBtn} ${ activeTab === "requests" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("requests")}> <div className={Style.reqCouter}>{requests.length > 0 && `${requests.length}`} </div><img src="/icons/user.png"style={{height:'20px'}}/></button>
+                <button className={`${Style.friendTabsBtn} ${ activeTab === "createGroupChat" }`} onClick={()=> setActiveTab("createGroupChat")}><div className={Style.createGroup}>+</div></button>
+
             </div>
             <main className={Style.mainContainerDisplayUsers}>
                 {activeTab === "friends" && (
@@ -205,6 +232,47 @@ export default function DirectIdClient({currentUser, conversationId}){
                         ))}
                     </div>
                 )}
+                    {activeTab === "createGroupChat" && (
+                      <div className={Style.createFromContainer}>
+                        <form onSubmit={handleSubmit}>
+                          <label>Create groupChat</label>
+
+                          <input
+                            type="text"
+                            placeholder="Enter a name..."
+                            value={groupName}
+                            onChange={(e) => setGroupName(e.target.value)}
+                          />
+
+                          <h3>Add friends</h3>
+
+                          <div className={Style.friendsList}>
+                                {uniqueFriends.map((f) => (
+                                    <div
+                                    key={f.friend_id}
+                                    className={`${Style.friendItem} ${
+                                        selectedFriends.includes(f.friend_id) ? Style.selected : ""
+                                    }`}
+                                    onClick={() => toggleFriend(f.friend_id)}
+                                    >
+                                    <div className={Style.profilImg}></div>
+
+                                    <span className={Style.username}>
+                                        {f.friend_username}
+                                    </span>
+                                    </div>
+                                ))}
+                            </div>
+
+                        
+                          <div className={Style.actions}>
+                            <button type="submit" className={Style.createBtn}>
+                              Create
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    )}
 
             </main>
         </section>

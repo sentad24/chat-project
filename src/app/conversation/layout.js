@@ -8,13 +8,14 @@ import DirectIdClient from "./components/DirectIdClient";
 
 export default async function ConversationLayout({ children }) {
   async function getUserFromToken(token) {
-    return jwt.decode(token);
+    return jwt.verify(token, process.env.JWT_SECRET)
   }
 
   const cookieStore = await cookies();
   const token = cookieStore.get("authToken")?.value;
 
   const currentUser = token ? await getUserFromToken(token) : null;
+
 
   return (
     <div className={style.container}>
@@ -31,7 +32,7 @@ export default async function ConversationLayout({ children }) {
 
       <div className={style.sideAndChatSection}>
         <aside>
-          <Sidebar currentUser={currentUser}  />
+          <Sidebar currentUser={currentUser}/>
         </aside>
 
         <main className={style.mainPanel}>
