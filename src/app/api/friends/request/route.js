@@ -11,7 +11,7 @@ export async function GET(req) {
 
   try {
     const result = await pool.query(
-      `SELECT f.sender_id, u.username
+      `SELECT f.sender_id, u.username, u.avatar_public_id
        FROM friendships f
        JOIN users u ON f.sender_id = u.id
        WHERE f.receiver_id = $1 AND f.status = 'pending'`,

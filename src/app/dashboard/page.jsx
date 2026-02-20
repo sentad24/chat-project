@@ -1,8 +1,9 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
-import ChatLayout from "@/app/channels/layout"
-import style from "@/components/Navbar/navbar.module.css"
+import ChatLayout from "@/app/channels/layout";
+import Navbar from "@/components/Navbar/navbar";
+import style from "@/components/Navbar/navbar.module.css";
 
 export default async function DashboardPage() {
   // Get cookies
@@ -13,28 +14,20 @@ export default async function DashboardPage() {
     redirect("/signup");
   }
 
-  let user;
+  let currentUser = null; 
+
   try {
-    user = jwt.verify(token, process.env.JWT_SECRET);
+    currentUser = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Current user from JWT:", currentUser);
+
   } catch (err) {
     return <p>Invalid or expired session. Please log in again.</p>;
   }
 
   return (
     <div>
-        <nav> 
-            <div className={style.container}>
-              <div className={style.nav}>
-                  <div className={style.logo}>
-                      Restdi
-                  </div>
-                  <div className={style.userInfo}>
-                      <h5>{user.username}</h5>
-                  </div>
-              </div>
-           </div>
-        </nav>
-        <ChatLayout/>
+     <Navbar currentUser={currentUser} />
+      <ChatLayout currentUser={currentUser} />
     </div>
   );
 }

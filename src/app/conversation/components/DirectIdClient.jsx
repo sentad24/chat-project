@@ -14,10 +14,6 @@ export default function DirectIdClient({currentUser, conversationId}){
     const [selectedFriends, setSelectedFriends] = useState([]);
     const [groupName, setGroupName]= useState("")
 
-    
-
-   
-    
    
     useEffect(() => {
         async function loadAvailableUsers() {
@@ -59,6 +55,7 @@ export default function DirectIdClient({currentUser, conversationId}){
         }
         
         const data = await res.json()
+        console.log("FRIENDS:", data)
         setFriends(Array.isArray(data) ? data : [])
      }
      loadFriends()
@@ -145,7 +142,16 @@ export default function DirectIdClient({currentUser, conversationId}){
             alert("Failed to create group")
         }
     }
-                
+    // useEffect(()=>{
+    //     async function fetchMe() {
+    //         const res = await fetch("/api/me")
+    //         if(!res.ok) return
+    //         const data = await res.json()
+    //         setUser(data.user)     
+    //     }
+    //     fetchMe()
+    // }, [])
+    
     
 
  return(
@@ -167,9 +173,11 @@ export default function DirectIdClient({currentUser, conversationId}){
 
             </div>
             <main className={Style.mainContainerDisplayUsers}>
+                
                 {activeTab === "friends" && (
                     <div className={Style.friendsSection}>
                         <h2>Friends</h2>
+                        
 
                         {friends.length === 0 && <p>No friends yet</p>}
                         
@@ -181,7 +189,20 @@ export default function DirectIdClient({currentUser, conversationId}){
                             role="button"
                             tabIndex={0}
                             >
-                            <div className={Style.profilImg}></div>
+                            <div className={Style.profilImg}>
+                                {f.avatar_public_id ? (
+                                    <img
+                                        src={`https://res.cloudinary.com/dmfxx37gi/image/upload/w_48,h_48,c_fill/${f.avatar_public_id}`}
+                                        alt="avatar"
+                                        className={Style.profileImage}
+                                        width={40}
+                                        height={40}
+                                        style={{"borderRadius" : "50%"}}
+                                    />
+                                    ) : (
+                                    <span>{f.friend_username?.charAt(0)?.toUpperCase() || "?"}</span>)
+                                }
+                            </div>
                             <span className={Style.friendName}>{f.friend_username}</span>
                             </div>
                         </li>
@@ -198,7 +219,17 @@ export default function DirectIdClient({currentUser, conversationId}){
                         {!currentUser?.id ? ( <p>You must be logged in to send a friend request</p> ) : (
                             filterUsers(findUsers).map((u, index) => (
                                 <div className={Style.findeUsersSection} key={u.id ?? index}>
-                                    <div className={Style.profilImg}></div>
+                                    <div className={Style.profilImg}>
+                                        {u.avatar_public_id ? (
+                                            <img
+                                                src={`https://res.cloudinary.com/dmfxx37gi/image/upload/w_48,h_48,c_fill/${u.avatar_public_id}.png`}
+                                                alt="avatar"
+                                                className={Style.profileImage}
+                                            />
+                                            ) : (
+                                            <span>{u.username?.charAt(0)?.toUpperCase() || "?"}</span>
+                                        )}
+                                    </div>
                                     <li className={Style.findUserName}>{u.username}</li>
                                     <FriendRequestButton
                                         senderId={currentUser.id}
@@ -221,7 +252,20 @@ export default function DirectIdClient({currentUser, conversationId}){
                             <div className={Style.friendReqContainer} key={req.id ?? index}>
                                 
                                 <div className={Style.imgAndName}>
-                                    <div className={Style.profilImg}></div>
+                                    <div className={Style.profilImg}>
+                                        {req.avatar_public_id ? (
+                                            <img
+                                                src={`https://res.cloudinary.com/dmfxx37gi/image/upload/w_48,h_48,c_fill/${req.avatar_public_id}`}
+                                                alt="avatar"
+                                                className={Style.profileImage}
+                                                width={40}
+                                                height={40}
+                                                style={{"borderRadius" : "50%"}}
+                                            />
+                                            ) : (
+                                            <span>{req.username?.charAt(0)?.toUpperCase() || "?"}</span>
+                                        )}
+                                    </div>
                                     <p className={Style.friReqName}>{req.username}</p>
                                 </div>
                                 <div className={Style.btnsSection}>
@@ -255,7 +299,20 @@ export default function DirectIdClient({currentUser, conversationId}){
                                     }`}
                                     onClick={() => toggleFriend(f.friend_id)}
                                     >
-                                    <div className={Style.profilImg}></div>
+                                    <div className={Style.profilImg}>
+                                        {f.avatar_public_id ? (
+                                            <img
+                                                src={`https://res.cloudinary.com/dmfxx37gi/image/upload/w_48,h_48,c_fill/${f.avatar_public_id}.png`}
+                                                alt="avatar"
+                                                className={Style.profileImage}
+                                                width={40}
+                                                height={40}
+                                                style={{"borderRadius" : "50%"}}
+                                            />
+                                            ) : (
+                                            <span>{f.friend_username?.charAt(0)?.toUpperCase() || "?"}</span>
+                                        )}
+                                    </div>
 
                                     <span className={Style.username}>
                                         {f.friend_username}

@@ -95,7 +95,17 @@ export default function ChatDisplay({ conversationId, currentUser }) {
           <div key={m.id} className={style.chatMesssegeContainer}>
             <div className={style.infoMessagesContainer} >
               <div className={style.profileImageContainer}>
-                <div className={style.profileImage}></div>
+                <div className={style.profileImage}>
+                  {m.avatar_public_id ? (
+                    <img
+                        src={`https://res.cloudinary.com/dmfxx37gi/image/upload/w_48,h_48,c_fill/${m.avatar_public_id}.png`}
+                        alt="avatar"
+                        className={style.profileImage}
+                    />
+                    ) : (
+                    <span>{m.username?.charAt(0)?.toUpperCase() || "?"}</span>
+                  )}
+                </div>
               </div>
               <div>
                 <div> 

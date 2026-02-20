@@ -24,14 +24,13 @@ export async function POST(req) {
 
       const groupId = res.rows[0].id;
 
-      // Insert members if any
-      if (members && members.length > 0) {
-        const placeholders = members.map((_, i) => `($1, $${i + 2})`).join(",");
-        await client.query(
-          `INSERT INTO group_members (group_id, user_id) VALUES ${placeholders}`,
-          [groupId, ...members]
-        );
-      }
+      // Insert creator + members into group_members
+      const allMembers = [createdBy, ...(members || [])];
+      const placeholders = allMembers.map((_, i) => `($1, $${i + 2})`).join(",");
+      await client.query(
+        `INSERT INTO group_members (group_id, user_id) VALUES ${placeholders}`,
+        [groupId, ...allMembers]
+      );
 
       await client.query("COMMIT");
 

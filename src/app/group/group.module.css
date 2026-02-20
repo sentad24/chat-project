@@ -1,0 +1,146 @@
+.groupLayoutContainer{
+    display: flex;
+    flex-direction: row;
+}
+
+.container{
+    display: flex;
+    height: 90vh;
+    
+}
+.members{
+    background-color: blueviolet;
+    width: 15vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.groupName{
+    font-size: 30px;
+    padding:0rem 1rem ;
+
+}
+.groupMembersContainer{
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(52, 52, 52, 0);
+    padding: 0.25rem 1rem;
+    align-items: center;
+    gap: 1rem;
+    font-size: 21px;
+
+}
+.userInfoContainer{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.profileImage{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1 solid #2c2c2c;
+    background-color: rgb(27,27,27);
+    color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.date{
+    font-weight: 500;
+}
+.messageContainer{
+    background-color: #6eb3d1;
+    max-width: 95%;
+    max-height: fit-content;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.chat{
+    background-color: brown;
+    display: flex;
+    padding: rem;
+    flex-direction: column;
+}
+.messagesContainer{
+    flex:1;
+    overflow-y: auto;
+    background-color: #858585;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    padding: 1rem;
+}
+.messages{
+    background-color: var(--dark-bg);
+    background-color: rgba(200, 8, 8, 0.876);
+    padding: 5px;
+    border: 0.5px solid #f1f1f11c;
+    border-radius: .5rem;
+    width: 80%;
+    min-height: 100px; 
+}
+
+.inputsContainer{
+    display: flex;
+    padding: 10px;
+    width:75vw;
+    border-radius: 20px;
+    height: 50px;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.inputBar{
+    height: 35px;
+    border: none;
+    border-radius: 1.5rem;
+    background-color: #303339;
+    color: #F1F1F1;
+    width: 70vw;
+    font-size: 14px;
+    transition: background 0.2s;
+    padding: 5px 10px 5 10px;
+
+}
+.inputBar::placeholder {
+    color: #72767d;
+    
+}
+.inputBar:focus {
+    outline: none;
+    background-color: #3a3f44;
+}
+  
+
+.button {
+    width: 40px;
+    height: 40px;
+    background-color: #6eb3d1; 
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s, transform 0.3s;
+}
+  
+.button:hover {
+    background-color: #7ecbec;
+    transform: scale(1.05);
+}
+  
+.button:active {
+    transform: scale(0.95);
+}
+.SendIcon{
+    width: 25px;
+    height: 25px;
+
+}

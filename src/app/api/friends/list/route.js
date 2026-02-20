@@ -13,14 +13,22 @@ export async function GET(req) {
       SELECT 
           f.id,
           f.status,
+
           CASE 
-              WHEN f.sender_id = $1 THEN f.receiver_id
-              ELSE f.sender_id
+            WHEN f.sender_id = $1 THEN f.receiver_id
+            ELSE f.sender_id
           END AS friend_id,
+
           CASE 
-              WHEN f.sender_id = $1 THEN u2.username
-              ELSE u1.username
-          END AS friend_username
+            WHEN f.sender_id = $1 THEN u2.username
+            ELSE u1.username
+          END AS friend_username,
+
+          CASE 
+            WHEN f.sender_id = $1 THEN u2.avatar_public_id
+            ELSE u1.avatar_public_id
+          END AS avatar_public_id
+
       FROM friendships f
       JOIN users u1 ON f.sender_id = u1.id
       JOIN users u2 ON f.receiver_id = u2.id
@@ -29,6 +37,7 @@ export async function GET(req) {
       `,
       [userId]
     );
+
 
     return NextResponse.json(res.rows);
   } catch (err) {

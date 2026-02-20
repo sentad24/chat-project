@@ -66,7 +66,16 @@ export default function GlobalChat({ threads, initialComments}) {
             <div key={thread.id} className={style.comments}>
                 <div className={style.infoSection}>
                     <div className={style.profileImageContainer}>
-                        <div className={style.profileImage}></div>
+                        {thread.avatar_public_id ? (<img
+                            src={
+                                thread.avatar_public_id
+                                ? `https://res.cloudinary.com/dmfxx37gi/image/upload/w_48,h_48,c_fill/${thread.avatar_public_id}.png`
+                                : "/default-avatar.png"
+                            }
+                            alt="avatar"
+                            className={style.profileImage}
+                         />):(<span>{thread.username?.charAt(0)?.toUpperCase() }</span>)}
+                        
                     </div>
                     <div className={style.userInfoContainer}>
                         <div className={style.userInfo}>

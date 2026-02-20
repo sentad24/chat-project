@@ -2,7 +2,7 @@
 import SendIcon from "@/../public/icons/send-message.png"
 import style from "@/app/channels/globalChat.module.css";
 import Image from "next/image";
-import GlobalChat from "./globalChat/page";
+import GlobalChat from "@/app/channels/globalChat/page";
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 

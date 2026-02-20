@@ -1,0 +1,22 @@
+export const AVATAR_IDS = [
+    'adventurer-1769775195114_uel4jl',
+    'adventurer-1769775168490_zd6qcf',
+    'adventurer-1769775180052_bjpgfv',
+    'adventurer-1769775182984_ucfl1c',
+    'adventurer-1769775197683_scxuj1',
+    'adventurer-1769775162748_uf57fw',
+    'adventurer-1769775171364_boxsbt',
+    'adventurer-1769775192141_mllvdg',
+    'adventurer-1769775185749_jlra9l',
+    'adventurer-1769775201789_pa92o8',
+    'adventurer-1769775205349_k6lnzx',
+    'adventurer-1769775212202_o5objc',
+    'adventurer-1769775208278_qeucbu',
+    'adventurer-1769775215351_jihctl',
+    'adventurer-1769775222319_fnisf3',
+    'adventurer-1769775225178_kmbcs0',
+    'adventurer-1769775230643_s7f53h',
+    'adventurer-1769775218702_zgnd3j',
+    'adventurer-1769775227805_hx3n5j',
+    'adventurer-1769775233898_y8ndfv'
+] 

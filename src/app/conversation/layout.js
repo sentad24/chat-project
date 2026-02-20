@@ -20,14 +20,7 @@ export default async function ConversationLayout({ children }) {
   return (
     <div className={style.container}>
       <nav>
-        <div className={Navstyle.container}>
-          <div className={Navstyle.nav}>
-            <div className={Navstyle.logo}>Restdi</div>
-            <div className={Navstyle.userInfo}>
-              <h5>{currentUser?.username}</h5>
-            </div>
-          </div>
-        </div>
+        <Navbar currentUser={currentUser}/>
       </nav>
 
       <div className={style.sideAndChatSection}>

@@ -5,7 +5,7 @@ import jwt, { decode } from "jsonwebtoken";
 export async function GET() {
   try {
     const res = await pool.query(`
-      SELECT posts.id, posts.title, posts.body, posts.created_at, users.username
+      SELECT posts.id, posts.title, posts.body, posts.created_at, users.username, users.avatar_public_id
       FROM posts
       JOIN users ON posts.user_id = users.id
       ORDER BY posts.created_at ASC
@@ -47,13 +47,22 @@ export async function POST(req) {
     const post = result.rows[0]
 
     const userRes = await pool.query(
-      `SELECT username FROM users WHERE id = $1`,
-    [user_id]
+      `
+      SELECT username, avatar_public_id
+      FROM users
+      WHERE id = $1
+      `,
+      [user_id]
     );
     
     post.username = userRes.rows[0].username;
 
-    return NextResponse.json(post, { status: 201 });
+    return NextResponse.json({    ...postRes.rows[0],
+      username: userRes.rows[0].username,
+      avatar_public_id: userRes.rows[0].avatar_public_id,
+    },
+    { status: 201 }
+  );
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
