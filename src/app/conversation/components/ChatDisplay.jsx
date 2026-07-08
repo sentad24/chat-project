@@ -12,6 +12,7 @@ export default function ChatDisplay({ conversationId, currentUser }) {
   const scrollToBottom = ()=>{
     chatEndRef.current?.scrollIntoView({ behavor: "smooth "})
   }
+ 
 
   async function loadMessages() {
     if (!conversationId) return;
@@ -141,6 +142,7 @@ export default function ChatDisplay({ conversationId, currentUser }) {
         >
           <span>
             <Image src={SendIcon} alt="sendIcon" className={style.sendIcon} />
+            s
           </span>
         </button>
       </div>

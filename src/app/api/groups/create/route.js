@@ -1,45 +1,81 @@
-"use server";
-
 import pool from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
+  const client = await pool.connect();
+
   try {
     const body = await req.json();
     const { name, members, createdBy } = body;
 
     if (!name || !createdBy) {
-      return new NextResponse("Missing required fields", { status: 400 });
+      return NextResponse.json(
+        {
+          error: "Missing required fields",
+          received: body,
+        },
+        { status: 400 }
+      );
     }
 
-    const client = await pool.connect();
-    try {
-      await client.query("BEGIN");
+    await client.query("BEGIN");
 
-      // Insert group with createdBy
-      const res = await client.query(
-        "INSERT INTO groups (group_name, created_by) VALUES ($1, $2) RETURNING id",
-        [name, createdBy]
-      );
+    // Create the group
+    const groupResult = await client.query(
+      `
+      INSERT INTO groups (group_name, created_by)
+      VALUES ($1, $2)
+      RETURNING id
+      `,
+      [name, createdBy]
+    );
 
-      const groupId = res.rows[0].id;
+    const groupId = groupResult.rows[0].id;
 
-      // Insert creator + members into group_members
-      const allMembers = [createdBy, ...(members || [])];
-      const placeholders = allMembers.map((_, i) => `($1, $${i + 2})`).join(",");
-      await client.query(
-        `INSERT INTO group_members (group_id, user_id) VALUES ${placeholders}`,
-        [groupId, ...allMembers]
-      );
+    // Remove duplicate members
+    const allMembers = [
+      createdBy,
+      ...new Set(
+        (members || []).filter(id => id !== createdBy)
+      )
+    ];
 
-      await client.query("COMMIT");
 
-      return new NextResponse(JSON.stringify({ groupId }), { status: 200 });
-    } finally {
-      client.release();
-    }
+    const values = allMembers
+      .map((_, index) => `($1, $${index + 2})`)
+      .join(",");
+
+    await client.query(
+      `
+      INSERT INTO group_members (group_id, user_id)
+      VALUES ${values}
+      `,
+      [groupId, ...allMembers]
+    );
+
+    await client.query("COMMIT");
+
+    console.log("Group created successfully:", groupId);
+
+    return NextResponse.json(
+      {
+        success: true,
+        groupId,
+      },
+      { status: 200 }
+    );
   } catch (err) {
-    console.error(err);
-    return new NextResponse("Server error", { status: 500 });
+    await client.query("ROLLBACK");
+
+    console.error("Create group error:", err);
+
+    return NextResponse.json(
+      {
+        error: err.message,
+      },
+      { status: 500 }
+    );
+  } finally {
+    client.release();
   }
 }

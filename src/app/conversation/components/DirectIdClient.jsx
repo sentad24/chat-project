@@ -54,12 +54,18 @@ export default function DirectIdClient({currentUser, conversationId}){
             return;
         }
         
-        const data = await res.json()
-        console.log("FRIENDS:", data)
-        setFriends(Array.isArray(data) ? data : [])
+        const data = await res.json();
+
+        const filteredFriends = data.filter(
+        (friend) => friend.friend_id !== currentUser.id
+        );
+
+        console.log("FRIENDS WITHOUT SELF:", filteredFriends);
+
+        setFriends(Array.isArray(filteredFriends) ? filteredFriends : []);
      }
      loadFriends()
-    },[])
+    },[currentUser?.id])
 
 
 
@@ -129,19 +135,33 @@ export default function DirectIdClient({currentUser, conversationId}){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const res = await fetch("/api/groups/create", {
+    
+        const payload = {
+            name: groupName,
+            members: selectedFriends,
+            createdBy: currentUser?.id,
+          };
+          
+          console.log("PAYLOAD:", payload);
+          
+          const res = await fetch("/api/groups/create", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-
-            body: JSON.stringify({ name: groupName, members:selectedFriends,createdBy: currentUser.id,})
-        })
-        if(res.ok) {
-            const data = await res.json()
-            redirect(`/channels/group/${data.groupId}`)
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+          
+          const data = await res.json();
+          
+          console.log("RESPONSE:", data);
+    
+        if (res.ok) {
+            redirect(`/group/${data.groupId}`);
         } else {
-            alert("Failed to create group")
+            alert(data.error || "Failed to create group");
         }
-    }
+    };
     // useEffect(()=>{
     //     async function fetchMe() {
     //         const res = await fetch("/api/me")

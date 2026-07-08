@@ -18,6 +18,7 @@ export async function GET(req) {
       FROM groups g
       JOIN group_members gm ON gm.group_id = g.id
       WHERE gm.user_id = $1
+      AND gm.left_at IS NULL
       ORDER BY g.created_at DESC
       `,
       [userId]

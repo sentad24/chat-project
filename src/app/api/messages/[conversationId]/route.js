@@ -14,7 +14,13 @@ export async function GET(req, context) {
     }
 
     const queryText = `
-      SELECT m.id, m.content, m.sender_id, m.created_at, u.username
+      SELECT 
+        m.id,
+        m.content,
+        m.sender_id,
+        m.created_at,
+        u.username,
+        u.avatar_public_id
       FROM messages m
       LEFT JOIN users u ON m.sender_id = u.id
       WHERE m.conversation_id = $1::int

@@ -14,7 +14,7 @@ export default async function ChatPage({ params, }) {
     try {
       currentUser = jwtDecode(token);
     } catch (err) {
-      /* eslint-disable */ console.error("Invalid token", err);
+      console.error("Invalid token", err);
     }
   }
 
