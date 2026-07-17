@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import FriendRequestButton from "@/app/conversation/[directID]/FriendRequestButton/FriendRequestButton"
 import Style from "@/app/conversation/conversation.module.css"
 import { redirect } from "next/navigation"
+import { socket } from "@/lib/socket"
 
 export default function DirectIdClient({currentUser, conversationId}){
     currentUser = currentUser ?? {}
@@ -71,12 +72,22 @@ export default function DirectIdClient({currentUser, conversationId}){
 
 
     async function acceptRequest(senderId, receiverId) {
-        await fetch("/api/friends/accept", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ senderId, receiverId })
-        });
-        setRequests(reqs => reqs.filter(r => r.sender_id !== senderId || r.receiver_id !== receiverId));
+        const res = await fetch("/api/friends/accept", 
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    senderId,
+                    receiverId
+                })
+            }
+        );
+        if(res.ok){
+            socket.emit( "accept-friend-request", {senderId, receiverId});
+            setRequests(reqs => reqs.filter( r => r.sender_id !== senderId));
+        }
     }
     
     async function declineRequest(senderId, receiverId) {
@@ -162,15 +173,53 @@ export default function DirectIdClient({currentUser, conversationId}){
             alert(data.error || "Failed to create group");
         }
     };
-    // useEffect(()=>{
-    //     async function fetchMe() {
-    //         const res = await fetch("/api/me")
-    //         if(!res.ok) return
-    //         const data = await res.json()
-    //         setUser(data.user)     
-    //     }
-    //     fetchMe()
-    // }, [])
+    useEffect(() => {
+
+        if (!currentUser?.id) return;
+    
+    
+        socket.on(
+            "friend-request-received",
+            (request) => {
+    
+                console.log(
+                    "New friend request:",
+                    request
+                );
+    
+    
+                setRequests(prev => [
+                    request,
+                    ...prev
+                ]);
+    
+            }
+        );
+    
+    
+        socket.on(
+            "friend-request-accepted",
+            (data)=>{
+                console.log(
+                    "Friend accepted:",
+                    data
+                );
+                    loadFriends();
+            }
+        );
+    
+    
+        return () => {
+            socket.off(
+                "friend-request-received"
+            );
+    
+            socket.off(
+                "friend-request-accepted"
+            );
+        };
+    },[currentUser?.id]);
+ 
     
     
 
@@ -188,7 +237,21 @@ export default function DirectIdClient({currentUser, conversationId}){
             <div className={Style.friendTabsBtns}>
                 <button className={`${Style.friendTabsBtn} ${activeTab === "friends" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("friends")}><span> <img src="/icons/friends.png" style={{height:'20px'}} /></span></button>
                 <button className={`${Style.friendTabsBtn} ${ activeTab === "addFriends" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("addFriends")}><span><img src="/icons/add-friend.png"style={{height:'20px'}}/></span></button>
-                <button className={`${Style.friendTabsBtn} ${ activeTab === "requests" ? Style.activeTab: ""}`} onClick={()=> setActiveTab("requests")}> <div className={Style.reqCouter}>{requests.length > 0 && `${requests.length}`} </div><img src="/icons/user.png"style={{height:'20px'}}/></button>
+                <button
+                    className={`${Style.friendTabsBtn} ${activeTab === "requests" ? Style.activeTab : ""}`}
+                    onClick={() => setActiveTab("requests")}
+                    >
+                    {requests.length > 0 && (
+                        <div className={Style.reqCouter}>
+                        {requests.length}
+                        </div>
+                    )}
+
+                    <img
+                        src="/icons/user.png"
+                        style={{ height: "20px" }}
+                    />
+                </button>
                 <button className={`${Style.friendTabsBtn} ${ activeTab === "createGroupChat" }`} onClick={()=> setActiveTab("createGroupChat")}><div className={Style.createGroup}>+</div></button>
 
             </div>

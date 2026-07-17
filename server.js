@@ -1,36 +1,163 @@
-import { createServer } from "http";
-import { Server } from "socket.io";
+const { createServer } = require("http");
+const next = require("next");
+const { Server } = require("socket.io");
 
-const httpServer = createServer();
 
-const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:3000", // your Next.js frontend
-    methods: ["GET", "POST"],
-  },
+const dev = process.env.NODE_ENV !== "production";
+
+const app = next({
+    dev
 });
 
-io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
 
-  socket.on("message", (data) => {
-    console.log("Message received:", data);
-    io.emit("message", data); // broadcast to all clients
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
-
-  socket.on("deleteMessage", async ({id}) =>{
-    console.log("message deleted", id)
-    io.emit("deleteMessage", ({id}))
-  })
+const handler = app.getRequestHandler();
 
 
-});
 
-// Run the HTTP + Socket.IO server
-httpServer.listen(4000, () => {
-  console.log("Socket.IO server running on port 4000");
+app.prepare().then(()=>{
+
+
+    const httpServer = createServer(
+        handler
+    );
+
+
+    const io = new Server(
+        httpServer,
+        {
+            cors:{
+                origin:"http://localhost:3000"
+            }
+        }
+    );
+
+
+
+    const onlineUsers = new Map();
+
+
+
+    io.on(
+        "connection",
+        (socket)=>{
+
+
+            const userId =
+                socket.handshake.auth.userId;
+
+
+
+            if(!userId){
+                socket.disconnect();
+                return;
+            }
+
+
+
+            socket.join(
+                `user-${userId}`
+            );
+
+
+
+            onlineUsers.set(
+                userId,
+                socket.id
+            );
+
+
+
+            console.log(
+                "Connected:",
+                userId
+            );
+
+
+
+            socket.on(
+                "send-private-message",
+                (data)=>{
+
+
+                    io.to(
+                        `conversation-${data.conversationId}`
+                    )
+                    .emit(
+                        "new-private-message",
+                        data
+                    );
+
+
+                }
+            );
+
+
+
+            socket.on(
+                "join-conversation",
+                (conversationId)=>{
+
+
+                    socket.join(
+                        `conversation-${conversationId}`
+                    );
+
+
+                }
+            );
+
+
+
+            socket.on(
+                "send-friend-request",
+                (data)=>{
+
+
+                    io.to(
+                        `user-${data.receiverId}`
+                    )
+                    .emit(
+                        "friend-request-received",
+                        data
+                    );
+
+
+                }
+            );
+
+
+
+            socket.on(
+                "disconnect",
+                ()=>{
+
+                    onlineUsers.delete(userId);
+
+
+                    io.emit(
+                        "user-offline",
+                        {
+                            userId
+                        }
+                    );
+
+                }
+            );
+
+
+        }
+    );
+
+
+
+    httpServer.listen(
+        3000,
+        ()=>{
+            console.log(
+                "Server running on http://localhost:3000"
+            );
+        }
+    );
+
+
 });

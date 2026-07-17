@@ -1,4 +1,5 @@
 "use client"
+import { socket } from "@/lib/socket";
 import style from "./FriendRequestButton.module.css"
 import Image from "next/image"
 import { useState } from "react"
@@ -7,6 +8,8 @@ export default function FriendRequestButton({ senderId, receiverId, onRequestSen
     const [loading, setLoading] = useState(false)
     const [sent, setSent] = useState(false)
     const [status, setStatus] = useState("")
+
+ 
 
     const sendRequest = async () => {
         if (sent) return
@@ -25,6 +28,13 @@ export default function FriendRequestButton({ senderId, receiverId, onRequestSen
            
 
             if (res.ok) {
+                socket.emit(
+                    "send-friend-request",
+                    {
+                        senderId,
+                        receiverId
+                    }
+                );
                 setSent(true)
                 setStatus("Friend request sent!")
                 setTimeout(()=>{

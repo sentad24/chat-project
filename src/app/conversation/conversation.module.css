@@ -75,13 +75,13 @@
 }
 .reqCouter{
     position: absolute;
-    top: -1;
-    left:25 ;
+    top: -1px;
+    right:-3px ;
     color: #ffffff;
-    width: 15px;
-    height: 15px;
+    width: 14px;
+    height: 14px;
     border-radius: 0.5rem;
-    background-color: #f10000;
+    background-color: #db2c2c;
    
 }
 .createGroup{
