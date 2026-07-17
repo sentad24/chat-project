@@ -1,32 +1,41 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
+import { getCurrentUser } from "@/lib/auth"; // your auth function
 
 export async function GET(req) {
   try {
-    const userId = req.nextUrl.searchParams.get("userId");
+    const user = getCurrentUser(req);
+    console.log(user);
+    
 
-    if (!userId) {
+    if (!user) {
       return NextResponse.json(
-        { error: "Missing userId" },
-        { status: 400 }
+        { error: "Unauthorized" },
+        { status: 401 }
       );
     }
 
     const result = await pool.query(
       `
-      SELECT g.id, g.group_name, g.created_at
+      SELECT 
+        g.id,
+        g.group_name,
+        g.created_at
       FROM groups g
-      JOIN group_members gm ON gm.group_id = g.id
+      JOIN group_members gm 
+        ON gm.group_id = g.id
       WHERE gm.user_id = $1
-      AND gm.left_at IS NULL
+        AND gm.left_at IS NULL
       ORDER BY g.created_at DESC
       `,
-      [userId]
+      [user.id]
     );
 
     return NextResponse.json(result.rows);
-  } catch (err) {
-    console.error(err);
+
+  } catch (error) {
+    console.error("GET GROUPS ERROR:", error);
+
     return NextResponse.json(
       { error: "Server error" },
       { status: 500 }

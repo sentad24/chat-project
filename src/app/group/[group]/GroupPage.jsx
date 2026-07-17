@@ -30,14 +30,21 @@ export default function GroupPage({ groupId, currentUser }) {
       setLoading(true);
       setError(null);
       try {
-        const groupRes = await fetch(`/api/groups/${groupId}`);
+        const groupRes = await fetch(`/api/groups/${groupId}`, {
+          credentials: "include",
+        });
         if (!groupRes.ok) throw new Error(`Group fetch failed: ${groupRes.status}`);
         const groupData = await groupRes.json();
         setGroup(groupData.group || {});
         setMembers(groupData.members || []);
 
         
-        const messagesRes = await fetch(`/api/groups/${groupId}/messages`);
+        const messagesRes = await fetch(
+          `/api/groups/${groupId}/messages`,
+          {
+            credentials: "include",
+          }
+        );
         if (!messagesRes.ok) throw new Error(`Messages fetch failed: ${messagesRes.status}`);
         const messagesData = await messagesRes.json();
         setMessages(Array.isArray(messagesData) ? messagesData : []);
@@ -72,7 +79,7 @@ export default function GroupPage({ groupId, currentUser }) {
   async function sendMessage() {
 
     if(!currentUser?.id){
-      console.warn("User not logged in")
+      console.log("User not logged in")
       return;
     }
 
@@ -80,6 +87,7 @@ export default function GroupPage({ groupId, currentUser }) {
 
     try {
       const res = await fetch(`/api/groups/${groupId}/messages`, {
+        credentials: "include",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text, senderId: currentUser.id, }),
@@ -150,6 +158,7 @@ export default function GroupPage({ groupId, currentUser }) {
     try{
       const res = await fetch(`/api/groups/${groupId}/add-members`,{
         method:"POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

@@ -13,6 +13,9 @@ export default  function Sidebar({currentUser}){
     const [groupsLoading, setGroupsLoading] = useState(true);
     const [groupsError, setGroupsError] = useState(null);
     
+
+    
+    // DO NOT TOUCH THIS //
     useEffect(() => {
         async function loadFriends() {
             setGroupsLoading(true);
@@ -42,6 +45,7 @@ export default  function Sidebar({currentUser}){
     useEffect(() => {
         console.log("Current user in Sidebar:", currentUser);
         
+        
     }, [currentUser]);
 
     useEffect(()=>{
@@ -51,12 +55,15 @@ export default  function Sidebar({currentUser}){
             if(!currentUser?.id) return;
           
             try {
-              const res = await fetch(`/api/groups?userId=${currentUser.id}`);
+                const res = await fetch("/api/groups", {
+                    credentials: "include",
+                });
               if(!res.ok) {
                 console.error("Failed to fetch groups:", res.status);
                 return;
               }
               const data = await res.json();
+              
               console.log("Groups fetched:", data);
               setGroups(Array.isArray(data) ? data : []);
             } catch(err) {
